@@ -1,0 +1,140 @@
+TW_JAVA商业地产Api扣费调用详情如下：
+
+
+背景：
+
+TW_java商铺现在发送soj的流程较复杂：现在发送soj的流程： 
+step1:  调用 http://api.anjuke.com/jinpu/1.1/shop/15012360 和  http://api.anjuke.com/jinpu/1.1/office/15012360 获取房源数据和click数据
+step 2: 调用 http://m.anjuke.com/sh/sp/shou/click/15517242,http://m.anjuke.com/sh/sp/zu/click/15517242,http://m.anjuke.com/sh/xzl/shou/click/15517242,http://m.anjuke.com/sh/xzl/zu/click/15517242,   
+step 3: api发扣费请求 http://api.anjuke.com/jinpu/1.1/click/shop/或http://api.anjuke.com/jinpu/1.1/click/office/
+step 4: 调用s.anjuke.com/stb 改成 在step1中直接向s.anjuke.com/stb 发soj
+
+调研过程：
+
+1. http://api.anjuke.com/jinpu/1.1/shop/15012360 和 http://api.anjuke.com/jinpu/1.1/office/15012360请求分别发生在web请求的http://m.anjuke.com/sh/sp/shou(zu)/15484992?isauction=1  和 http://m.anjuke.com/sh/xzl/shou/(zu)/15484992?isauction=1的控制器里。
+
+Controller处理过程如下：
+
+取获取房源数据和click参数。
+click参数先经过 Url decode，加入equid 属性后再encode, 然后作为2的请求的入参.
+方法结束转向页面Rental(Purchase)_Business（office）_View.tl
+
+2. 在转向视图Rental(Purchase)_Business（office）_View.tl后前台JS会自动发送get请求：http://m.anjuke.com/sh/sp(xzl)/shou(zu)/click/15484992?
+
+
+request parameter:
+
+referer:http://m.anjuke.com/sh/sp(xzl)/shou(zu)/  （请求来源的url，通赤header中取得）
+click:{                                   （通过step 1 请求并组装equid得到）
+    "spread_id": "0",
+    "property_id": "226338",
+    "macid": "C4B0BEA2-83AA-CFCB-E39A-48FA1BCED9E0",
+    "broker_id": "153924",
+    "district_id": "1",
+    "client_ip": "180.166.126.90",
+    "url": "api.anjuke.com/jinpu/1.1/shop/",
+    "trade_type": 5,
+    "city_id": "11",
+    "equid": "",
+    "entry": 101,
+    "pt": 1,
+    "user_id": 0,
+    "page_name": "Mobile_Shop_Detail",
+    "house_id": "15484992",
+    "block_id": "22"
+}
+
+请求被相应Controller的Click方法处理，该方法将click数据，invalidate, ir三个参数做为入参调用post请求：http://api.anjuke.com/jinpu/1.1/click/shop（office）/
+	invalidate, ir 的处理逻辑如下：先从cookie中查找lps的变量，如果有并以“|”为分隔符截成数组，如果数组的第一个元素中含有“sp”(商铺)或“xzl”（写字楼）并且数组长度=1 且再将该数组的第一个元素以“/“截断后的数组长度=5 时让invalidate = "1"， ir = "121"; 否则invalidate = "1"，ir = "9";
+	lps = PpcUtils.getLps(request);
+			
+			String lpsArr[] = lps.split("\\|");
+			if ((lpsArr[0].contains("sp") || lpsArr[0].contains("xzl"))
+					&& lpsArr[0].split("/").length == 5 && lpsArr.length == 1) {
+				invalidate = "1";
+				ir = "121";
+				if (referer.equals("null")) {
+					invalidate = "1";
+					ir = "9";
+				}
+
+
+
+
+step 3:  请求返回结果
+
+post http://api.anjuke.com/jinpu/1.1/click/shop（xzl）/请求后返回请求状态结果.
+get  http://m.anjuke.com/sh/sp(xzl)/shou(zu)/click/15484992?请求后返回null.
+
+
+        
+目前，我们已经修改了java填充cp参数直接让js发soj扣费请求，而不走api接口云发soj请求。
+
+
+1. java 中去掉断了TW_JAVA端对http://m.anjuke.com/sh/sp（xzl）/shou(zu)/click/15484992的请求(共四个请求)。
+
+2. java 在cp 和 office 的Purchase（Rent）Business(Office)ViewController中按一定要求填充cp参数,并传给model,在页面base.ftl的head里设置参数new-ppc去取cp值，js会根据new-ppc云发soj请求。
+
+office（写字楼）的CP参数要如下：
+
+$params :为step1为中click值
+$cp = array(
+            'v'          => '3.0', //'1.0'老好盘 '2.0'新好盘[经纪人的 paytype=10000] '3.0'新新好盘（新曝光系统）
+            'userId'     => (int)$params['user_id'], //newAdd 登录用户id
+            'userType'   => 0, //未登陆用户:0  普通用户:1  经纪人用户:2
+            'proId'      => (int)$params['house_id'], //房源id
+            'COMMID'     => 0, //房源小区id
+            'brokerId'   => (int)$params['broker_id'], //房源的发布人 Id:个人房源时,则为个人用户id,经纪人房源时则为经纪人id
+            'brokerType' => 2, //newAdd 经纪人类型 只好租有此区别 1:好 租个人 2:经纪人
+            'tradeType'  => $params['trade_type'], //房源类型 经纪人二 手房:1 经纪人租房:2 好租个人房源:3 经纪人商铺出租:4 经纪人商铺出售:5 经 纪人写字楼出租:6 经纪人写字楼出售:7
+            'channel'    => $channel, //渠道来源
+            'entry'      => $params['entry'], //好多 http://wiki.corp.anjuke.com/index.php?title=Soj1.2
+            'hpType'     => $params['pt'], //好多 http://wiki.corp.anjuke.com/index.php?title=Soj1.2
+            "blockId"    => (int)$params['block_id'],
+            "districtId" => (int)$params['district_id'],
+            "spreadId"   => (int)$params['spread_id'],
+            "abtest"     => '',
+            "isabTest"   => false,
+            "pt"         => $params['pt'],
+            "invalid"    => $params['invalid'],
+            "ir"         => $params['ir'],
+            "equid"      => $params['equid'];//曝光ID
+        ); 
+
+
+
+
+
+SP商铺的CP参数要如下：
+
+ $arrCustomParam = array(
+            'v'          => '3.0', //'1.0'老好盘 '2.0'新好盘[经纪人的 paytype=10000] '3.0'新新好盘（新曝光系统）
+            'userId'     => (int)$params['user_id'], //newAdd 登录用户id
+            'userType'   => 0, //未登陆用户:0  普通用户:1  经纪人用户:2
+            'proId'      => (int)$params['house_id'], //房源id
+            'COMMID'     => 0, //房源小区id
+            'brokerId'   => (int)$params['broker_id'], //房源的发布人 Id:个人房源时,则为个人用户id,经纪人房源时则为经纪人id
+            'brokerType' => 2, //newAdd 经纪人类型 只好租有此区别 1:好 租个人 2:经纪人
+            'tradeType'  => $params['trade_type'], //房源类型 经纪人二 手房:1 经纪人租房:2 好租个人房源:3 经纪人商铺出租:4 经纪人商铺出售:5 经 纪人写字楼出租:6 经纪人写字楼出售:7
+            'channel'    => 12
+            'entry'      => $params['entry'], //好多 http://wiki.corp.anjuke.com/index.php?title=Soj1.2
+            'hpType'     => $params['pt'], //好多 http://wiki.corp.anjuke.com/index.php?title=Soj1.2
+
+            "blockId"    => (int)$params['block_id'],
+            "districtId" => (int)$params['district_id'],
+            "spreadId"   => (int)$params['spread_id'],
+            "abtest"     => null,
+            "isabTest"   => false,
+            "invalid"    => $params['invalid'],
+            "ir"         => $params['ir'],
+            "equid"      => $params['equid'];//曝光ID
+        ); 
+        
+        
+        
+
+
+
+
+
+        

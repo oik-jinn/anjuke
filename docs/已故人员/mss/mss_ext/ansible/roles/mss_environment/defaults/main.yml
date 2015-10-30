@@ -1,0 +1,4 @@
+---
+# defaults file for mss_environment
+mss_home: /home/mss
+mss_version: 1.1.0-SNAPSHOT

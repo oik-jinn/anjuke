@@ -1,0 +1,26 @@
+Mobile API调用新房API的情况
+
+Mobile API调用新房API的仓库和调用API详情如下：
+
+
+1. 仓库：New-api
+调用新房api情况：
+
+http://api.aifang.com/m/iphone/1.3/loupan/infos/
+http://api.aifang.com/m/iphone/1.3/loupan/Newimages/?loupan_id={$loupan_id}
+http://api.aifang.com/m/iphone/1.3/loupan/IDList/
+
+
+2. 仓库：anjuke-mobile-api(ajkapi)
+调用新房api情况：
+
+http://api.aifang.com/m/iphone/1.3/collect/loupan/list/
+http://api.aifang.com/m/iphone/1.3/advert/throughtrain/
+http://api.aifang.com/m/iphone/1.3/loupan/userview/history/
+
+
+3. 仓库：user_site for api-mobile-api:
+
+
+http://api.aifang.com/m/iphone/1.3/loupan/infos/
+http://api.aifang.com/m/iphone/1.3/loupan/Newimages/?loupan_id={$loupan_id}

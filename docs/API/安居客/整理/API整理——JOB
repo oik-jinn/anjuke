@@ -1,0 +1,114 @@
+## API整理——JOB
+
+### 微聊这边和java 相关的只有推送的项目
+
+* shell脚本位置
+
+    ```
+    /home/www/bin/notify-apns/service-apns.sh restart
+    #(app10-128,app10-129)
+
+    /home/www/bin/notify-apns/service-convert.sh restart
+    #(app10-128,app10-129) 
+
+    /home/www/apps/tomcat_bases/tomcat_apns/bin/restart.sh
+    #(app10-127,app10-128,app10-129)
+
+    ```
+
+* 监控
+[http://knowing.corp.anjuke.com/monitor/344/453](http://knowing.corp.anjuke.com/monitor/344/453) 
+
+### job服务器app10-117（总计27个）
+
+* `Chat_Job_Message_NotifyProcess`(13个)
+
+    ```
+    1、chat_register_amtp_user_queue
+    2、chat_queue_app_notify
+    3、chat_queue_app_amtp_notify
+    4、chat_register_amtp_user_queue
+    5、chat_queue_app_notify
+    6、chat_queue_app_amtp_notify
+    7、chat_register_amtp_user_queue
+    8、chat_queue_app_notify
+    9、chat_queue_app_amtp_notify
+    10、chat_queue_new_user_message_process
+    11、chat_queue_push_message_for_ios
+    12、chat_json_register_device_queue
+    13、chat_queue_push_device_message_for_ios
+    ```
+* `Mobile_Job_UserDeviceInfoPersistence`（3个）
+  
+    ```
+    1、evans    12207     1  0 Jul07 ?        00:17:00 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_UserDeviceInfoPersistence --sleep-time=1
+    2、evans    12802     1  0 Jul07 ?        00:16:57 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_UserDeviceInfoPersistence --sleep-time=1
+    3、evans    24314     1  0 Jul08 ?        00:16:46 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_UserDeviceInfoPersistence --sleep-time=1
+    ```
+    
+* `Mobile_Job_DeviceInfoPersistence`（1个）
+
+    ```
+    1、evans    12576     1  3 May14 ?        2-07:35:38 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DeviceInfoPersistence --sleep-time=1`
+    ```
+* `Mobile_Job_BrokerNewPropNotice`(2个)
+
+    ```
+    1、evans    14998 14983  0 18:48 ?        00:00:00 /bin/sh -c /usr/local/php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_BrokerNewPropNotice --is-beta=1 >> /data1/logs/v2/Mobile_Job_BrokerNewPropNotice.log
+    2、evans    15003 14998 45 18:48 ?        00:00:04 /usr/local/php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_BrokerNewPropNotice --is-beta=1
+    ```
+* `Mobile_Job_DealQaNewAnswer`（1个）
+
+    ```
+    1、evans    16509     1  0 Mar11 ?        00:17:15 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealQaNewAnswer --sleep-time=1
+    ```
+* `Mobile_Job_DealServicePush`（2个）
+
+    ```
+    1、evans    18392 18372  0 Jul07 ?        00:00:00 /bin/sh -c /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealServicePush --sleep-time=1
+    2、evans    18409 18392  0 Jul07 ?        00:42:01 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealServicePush --sleep-time=1
+    ```
+* `Mobile_Job_DealServiceRecommend`（4个）
+
+    ```
+    1、evans    28030     1 39 18:05 ?        00:16:59 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealServiceRecommend --sleep-time=1
+    2、evans    28481     1 37 18:06 ?        00:15:57 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealServiceRecommend --sleep-time=1
+    3、evans    28924     1 35 18:07 ?        00:14:44 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealServiceRecommend --sleep-time=1
+    4、evans    29369     1 37 18:08 ?        00:15:00 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_DealServiceRecommend --sleep-time=1
+    ```
+
+* `Mobile_Job_JavaUserDeviceInfoPersistence`（1个）
+
+    ```
+    1、evans    31151     1  0 May14 ?        02:51:16 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/user-site/app-mobile-job/launcher.php --class=Mobile_Job_JavaUserDeviceInfoPersistence --sleep-time=1
+    ```
+
+* 附：第一个中13个的具体信息
+
+    ```
+    1、evans    11584     1  1 May14 ?        1-03:56:47 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_register_amtp_user_queue
+   
+    2、evans    11622     1  0 May14 ?        01:56:01 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_app_notify
+    
+    3、evans    11641     1  0 May14 ?        02:12:36 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_app_amtp_notify
+    
+    4、evans    12057     1  1 May14 ?        1-03:46:50 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_register_amtp_user_queue
+    
+    5、evans    12095     1  0 May14 ?        01:56:52 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_app_notify
+    
+    6、evans    12114     1  0 May14 ?        02:12:36 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_app_amtp_notify
+    
+    7、evans    12554     1  1 May14 ?        1-03:54:40 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_register_amtp_user_queue
+    
+    8、evans    12592     1  0 May14 ?        01:56:14 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_app_notify
+    
+    9、evans    12611     1  0 May14 ?        02:12:20 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_app_amtp_notify
+   
+    10、evans    13913     1  1 18:45 ?        00:00:03 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_new_user_message_process
+    
+    11、evans    24140     1  0 Jul11 ?        00:36:42 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_push_message_for_ios
+    
+    12、evans    28011     1  7 May15 ?        4-08:02:51 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_json_register_device_queue
+    
+    13、evans    31102     1  0 Jul13 ?        00:01:36 /usr/local/anjuke-php-fpm/bin/php /home/www/config/v2/anjuke-chat/chat-job/launcher.php --class=Chat_Job_Message_NotifyProcess --queue_name=chat_queue_push_device_message_for_ios
+    ```

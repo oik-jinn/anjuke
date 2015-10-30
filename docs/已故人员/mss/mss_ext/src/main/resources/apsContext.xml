@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aps="http://schema.corp.anjuke.com/ajf/aps"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+     http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-3.1.xsd
+     http://schema.corp.anjuke.com/ajf/aps
+     http://schema.corp.anjuke.com/ajf/aps/aps.xsd">
+
+    <bean id="mss"
+            class="com.anjuke.incubator.mss.service.mss.impl.MultipleStringSearchApsServiceImpl" />
+
+    <aps:service
+        class="com.anjuke.incubator.mss.service.mss.MultipleStringSearchApsService"></aps:service>
+
+    <!-- APS -->
+    <!-- kiteline status listener -->
+    <!-- <bean id="kitelineStatusListener"
+            class="com.anjuke.aps.kiteline.KiteLineServerStatusListener"
+            p:endpoint = "${kiteline.endpoint}" /> -->
+
+    <!-- aps status context -->
+    <bean id="statusContext"
+            class="com.anjuke.aps.kiteline.handler.StatusContext" />
+
+    <!-- exceptionHandler -->
+    <bean id="mssExceptionHandler"
+            class="com.anjuke.incubator.mss.aps.MssExceptionHandler" />
+
+    <!-- Handlers -->
+    <bean id="pingRequestHandler"
+            class="com.anjuke.aps.kiteline.handler.PingRequestHandler" />
+    <bean id="statusRequestHandler"
+            class="com.anjuke.aps.kiteline.handler.StatusRequestHandler"
+            p:context-ref = "statusContext" />
+    <bean id="mssSpringRequestHandler"
+            class="com.anjuke.incubator.mss.aps.MssSpringRequestHandler"
+            p:exceptionHandler-ref = "mssExceptionHandler" />
+
+    <bean id="processor"
+            class="com.anjuke.aps.server.processor.DefaultRequestProcessor" />
+
+    <!-- Filters -->
+    <bean id="statusMessageFilter"
+            class="com.anjuke.aps.kiteline.handler.StatusMessageFilter"
+            p:context-ref = "statusContext" />
+    <bean id="accesslogRequestFilter"
+            class="com.anjuke.aps.server.processor.AccessLogRequestFilter" />
+
+    <bean id="messageHandler"
+            class="com.anjuke.aps.server.DefaultMessageHandler"
+            p:processor-ref = "processor" />
+
+    <bean id="ServerFactory"
+            class="com.anjuke.incubator.mss.aps.ServerFactoryBean" />
+
+</beans>

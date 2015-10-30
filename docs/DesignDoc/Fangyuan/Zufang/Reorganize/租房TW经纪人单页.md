@@ -1,0 +1,79 @@
+## 租房TW经纪人单页白皮书
+
+### 说明
+```
+1.页面使用的表均是同步输出，对表的延迟敏感
+2.pv 取某天最高的pv，http://knowing.corp.anjuke.com/chart/7373，pv=779185
+```
+### 1、页面URL
+```
+http://m.anjuke.com/{城市简拼}/rent/{房源id}-{房源类型}
+```
+
+### 2、页面模块
+* 2.1、室内图
+* 2.2、小区图
+* 2.3、经纪人信息
+* 2.4、房源信息
+* 2.5、小区信息
+* 2.6、看过的用户还看了，猜你喜欢，附近推荐
+* 2.8、seo
+* 2.9、位置及周边
+
+### 3、页面模块列表
+|序号|URL|仓库|负责人|功能|
+| --- |--- | --- | --- | --- | 
+
+### 4、依赖的外部URL
+|序号|配置名|URL|功能|其它|
+|---| --- | --- | --- | --- |
+|2.2|api_community_image_url|http://10.10.6.6:8080/service-internal/rest/communities/getCommCategory?json|获取小区图片信息				||
+|2.4|rent_servers|http://10.10.8.2|经纪人单页:获取归档的租房隔离房源信息|hbase|
+|2.4||http://user.anjuke.com/ajax/favorite/list_favorite_ids?num=100|获得site的收藏房源|该配置直接在代码写死的|
+|2.4|http://api.anjuke.com/common/cookie/get/guid/579CC868-F5DE-F5AD-17ED-2B6478D63DB8|根据guid远程获得cookie||
+|2.5|base_api_domain|http://api.anjuke.com/mobile/1.3/community.get?id=440550&from_module=touch_web|获取小区租房房源总套数||
+|2.5|base_api_domain|http://api.anjuke.com/anjuke/4.0/community/round?comm_id=440550&is_nocheck=1|获取小区周边信息||
+|2.6|ajax异步加载|http://m.anjuke.com/ajax/rent/recommend/?city_id=11|||
+|2.6.1|2.6接口调用的BI的url|http://rcmd.a.ajkdns.com/rent-tw-pro-history/users/579CC868-F5DE-F5AD-17ED-2B6478D63DB8/recommendations，http://rcmd.a.ajkdns.com/rent-tw-pro/items/53617778/similars，http://rcmd.a.ajkdns.com/rent-tw-pro-near/items/53617778/similars|||
+|2.8|solr_esf_comm_url|http://sc10-001.a.ajkdns.com:8983/community35/|小区租房for小区大区||
+|2.9||http://m.anjuke.com/ajax/community/periphery?from=rent&comm_id=240|js异步加载位置及周边||
+
+
+### 5、数据库和表
+
+|序号|数据库|表名称|作用|读写|是否独有|计算公式|访问量（单位天）|
+|---| --- | --- | --- | --- | --- |--- |--- |
+|2.2|anjuke_db|ajk_attachments_comm|读取小区图片|读|是|779185(pv)*0.2(非缓存命中率)|15w|
+|2.3|rent_db| broker_mapping |租房和安居客经纪人对应关系     	|读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.3|user_prop_db| user_broker_base |读取经纪人基础信息     	|读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.3|user_prop_db| user_broker_company |读取经纪人公司信息     	|读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.3|action_db|e_res_activity_pro_{当前年}|根据房源ID获取房产季信息    	|读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.4|user_prop_sh_db，user_prop_bj_db，user_prop_s0{index}_db	|     rent_{city_id}|读取房源基本信息     |读写     |是     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.4|rent_db	|     prop|读取房源基本信息（如果隔离数据不存在，再读取该表）     |读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.4|rent_db| promotion_prop_planning|for soj     	|读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.4|user_prop_sh_db，user_prop_bj_db，user_prop_s0{index}_db	|     rent_extend_{city_id}|写入房源扩展信息     |读写     |是     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db| sw_metro_stations|读取小区周边地铁站信息     |读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db| sw_metro_community_distances|读取小区地铁站距离信息     |读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db| sw_metros|读取地铁信息     |读     |否     |779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|ajk_commtype|获取区域板块信息|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|ajk_commextend|获取小区扩展信息|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|ajk_usetype|通过ID获得房屋类型配置,eg.老公房|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|map_communities_baidu|小区地标|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|ajk_communitys|读取小区信息|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|ajk_wuba_commtype_relation|判断该小区是否是虚拟小区|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.5|anjuke_db|map_communities_soso_pano|街景坐标|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.8|anjuke_db|ajk_commtype|获取区域板块信息|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+|2.8|seo_db|seo_online_words|获取大家都在搜数据|读|否|779185(pv)*0.2(非缓存命中率)|15w|
+
+### 6、Memcache&Redis
+|名称|类型|名称|地址|申请大小|使用率|是否统一管理|功能|负责人|
+|--- | --- | --- |--- | --- | --- | --- | --- | --- |
+|设置同区域的随机20个小区大全|memcache |str_memcache_key_for_seo_community_v2|框架默认memcache|    ||          是|| |
+|经纪人的房源图片  |zufang_images_master|redis |10.10.8.26:6387|10G    |5.38G|          是|租房隔离图片| 程启明|
+|seo|memcache | 'AllAreaAndBlocks_'.$city_id;'58Community_'.$city_id;;'SpecialSearch_'.$city_id; 'Communities_'.$city_id.'_'.$params;'EsfSeoChannel'.'_'.$city_id.'_'.$params;'ZfSeoChannel'.'_'.$city_id.'_'.$params;'Xinfang_'.$city_id.'_'.$params;'BrokerCompany_'.$city_id.'_'.$params;'default_memcache_key';|框架默认memcache|    ||          是|| |
+|seo|memcache | |框架默认memcache|    ||          是|大家都在搜| |
+|经纪人信息|memcache | service_seo_cache_group|10.10.3.106:11215,10.10.3.107:11215|    ||          是|| |
+### 7、关联job
+|job名称|job管理地址|功能|负责人|
+|--- | --- | --- | --- |
+

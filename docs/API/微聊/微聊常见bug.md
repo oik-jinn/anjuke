@@ -1,0 +1,1 @@
+##### 1. [chat-cms 后台无法向全国经纪人发送公众号信息](http://gitlab.corp.anjuke.com/_site/docs/blob/master/API/%E5%BE%AE%E8%81%8A/bug%E8%AF%A6%E6%83%85/bug_1.md)

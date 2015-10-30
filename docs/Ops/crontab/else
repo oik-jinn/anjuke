@@ -1,0 +1,125 @@
+ ###xapp10-194
+<pre>
+ 0 3 * * * ( /bin/bash /home/www/bin/drone_shell/clear_es_logs.sh >>/home/www/bin/drone_shell/clear.log )
+</pre>
+
+ ###app10-021
+<pre>
+ #1 0 * * * /home/www/bin/log/nginx_cut.sh > /dev/null
+ 10 0 * * * /home/www/bin/log/clean_apps_log.sh > /dev/null
+</pre>
+
+ ###app10-024
+<pre>
+ 10 1 * * * /home/www/bin/log/string_log_clean.sh >> /data1/logs/stringmatch/clean.log
+
+ 1 2 * * * /home/www/bin/clean_v2_log.sh /data1/logs/v2/ >> /data1/logs/v2/clean.log
+ #1 0 * * * /home/www/bin/log/nginx_cut.sh > /dev/null
+</pre>
+
+ ###app10-050
+<pre>
+ 0 0 * * * /home/www/apps/zookeeper/bin/zkCleanup.sh /data1/zookeeper/ 20 >> /data1/zookeeper/zk_clean.log 2>&1
+
+ 0 0 * * * /bin/bash /home/www/bin/two_code_icon_clear.sh >> /data1/logs/upload_tmp/clear.log
+</pre>
+
+ ###app10-052
+<pre>
+ 0 0 * * *  /home/www/apps/zookeeper/bin/zkCleanup.sh /data1/zookeeper/ 20 >> /data1/zookeeper/zk_clean.log 2>&1
+</pre>
+
+
+ ###app10-070 app10-071 app10-073 app10-074 app10-110 app10-111
+<pre>
+ #Ansible: upload_to_hadoop
+ 30 0 * * * /home/www/nydus/bin/upload_to_hadoop.sh  >>/tmp/hadoop.log 2>&1 &
+
+ #Ansible: clean log
+ 5 0 * * * /home/www/nydus/bin/clean_log.sh >> /tmp/clean_log.log 2>&1 &
+</pre>
+
+ ###app10-101
+<pre>
+ 0 0 * * * /home/www/bin/nginx_log_clean.sh &> /dev/null
+
+ 30 0  * * * /home/www/nydus/bin/upload_to_hadoop.sh  >>/tmp/hadoop.log 2>&1 &
+
+ */10 * * * * /home/www/nydus/bin/jvm_stat.sh >>/tmp/jvm_stat_exec.log 2>&1 &
+
+ 5 0 * * * /home/www/nydus/bin/clean_log.sh >> /tmp/clean_log.log 2>&1 &
+</pre>
+
+ ###app10-147
+<pre>
+ #* * * * * /bin/sh /home/www/Octopus/JobsScript/worker.sh
+ #* * * * * /bin/sh /home/www/Octopus/JobsScript/jqueueprod.sh
+ #* * * * * /bin/sh /home/www/Octopus/JobsScript/jqueuecons.sh
+ #* * * * * /bin/sh /home/www/Octopus/JobsScript/jmonitor.sh
+</pre>
+
+ ###app10-194
+<pre>
+ #*/1 * * * * date >> /tmp/log
+
+ 1 */1 * * * bash /home/Jearyma/speed/speed.sh > /tmp/speed-log 2>&1
+
+ #*/3 * * * * python /home/Jearyma/speed/speed.py >> /home/Jearyma/tesssss.log 2>&1
+
+ 55 */1 * * * (date >> /tmp/data-log;python /home/Jearyma/speed/speed-data-translate.py)
+
+ 30 1 * * * (cd /home/Jearyma/speed;python rm_speed_log.py) 
+</pre>
+ ###app10-137
+<pre>
+ evans
+ 1 */2 * * * bash /home/www/aps_test/aps/example/check_usercenter.sh >> /home/www/aps_test/aps/example/restart_server.log 2>&1
+</pre>
+
+<pre>
+ root
+ #Ansible: time update
+ 0 */6 * * * /usr/sbin/ntpdate 10.10.6.130
+
+ #*/5 * * * * bash /data1/logs/flume/mail.sh >> /data1/logs/flume/mail.log 2>&1
+
+ #1 10 * * * bash /data1/logs/flume/mail-web.sh >> /data1/logs/flume/mail.log 2>&1
+
+ #3 10 * * * bash /data1/logs/flume/mail-job.sh >> /data1/logs/flume/mail.log 2>&1
+
+ * * * * *   bash /data1/logs/flume/check-http_code.sh >> /data1/logs/flume/mail.log 2>&1
+
+ #30 09 * * * bash /data1/logs/slow_url/slow_url.sh >> /data1/logs/slow_url/mail.log 2>&1
+
+ 31 09 * * * bash /data1/logs/slow_url/dao.sh >> /data1/logs/slow_url/mail.log 2>&1
+
+ #30 09 * * * bash /data1/logs/zhongyuan/zhongyuan.sh >> /data1/logs/slow_url/mail.log 2>&1
+
+ #04 */1 * * * bash /data1/logs/top30/top30.sh >> /data1/logs/slow_url/mail.log 2>&1
+
+ * * * * * bash /data1/logs/status/es_status.sh >> /data1/logs/status/mail.log 2>&1
+
+ #* * * * * bash /data1/logs/status/mss.sh >> /data1/logs/status/mss_mail.log 2>&1
+
+ #* * * * * bash /data1/logs/status/mss_new.sh >> /data1/logs/status/mss_mail.log 2>&1
+
+ #solr监控
+ */5 * * * * bash /data1/logs/status/solr.sh >> /data1/logs/status/mail.log 2>&1
+
+ #ip update
+ 10 23 * * * bash /opt/ip/update/ip_update.sh >> /opt/ip/update/ip_update.log 2>&1
+
+ #ip service 58
+ * * * * * bash /data1/logs/status/ipservice.sh >> /data1/logs/status/mail_ipservice.log 2>&1
+
+ #*/2 * * * * bash /data1/logs/status/alive.sh >> /dev/null 2>&1
+
+ #封ip
+ */5 * * * * bash /data1/logs/heimingdan/heimingdan.sh >> /data1/logs/heimingdan/ip.log 2>&1
+
+ #封ip段
+ */5 * * * * bash /data1/logs/heimingdan/ipduan.sh >> /data1/logs/heimingdan/ip.log 2>&1
+
+ #58个人房源
+ */5 * * * * bash /data1/logs/heimingdan/58geren.sh >> /data1/logs/heimingdan/58geren-ip.log 2>&1
+</pre>

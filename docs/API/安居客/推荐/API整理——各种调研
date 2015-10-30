@@ -1,0 +1,29 @@
+## API整理——各种调研
+
+### 表数据量过大
+
+* `mobile_api_db.view_comm_price_history`(38G)
+    
+    ```
+    记录用户浏览行为
+    INSERT INTO `view_comm_price_history` (`device_id`,`comm_id`,`city_id`) VALUES(?,?,?)
+    
+    获取房价页浏览历史???
+    /anjuke/4.0/guess/commlist
+    
+    写数据
+    anjuke/4.0/comm/get
+    ```
+    
+* `mobile_db.broker_community_sign_YYYYMM`(1G/月)
+
+    ```
+    经纪人小区签到业务
+    ```
+    
+* `mobile_db.broker_user_relation_YYYYMM`(3G/月)
+
+    ```
+    经纪人抢客户业务
+    ```
+    
