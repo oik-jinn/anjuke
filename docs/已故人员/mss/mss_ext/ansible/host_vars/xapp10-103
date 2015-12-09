@@ -1,9 +1,0 @@
-# -*- mode: yaml -*-
-# vi: set ft=yaml :
----
-ansible_ssh_host: xapp10-103
-ansible_ssh_port: 22
-ansible_ssh_user: root
-
-common_apt_mirror: http://10.10.3.224/ubuntu
-common_release_code: trusty

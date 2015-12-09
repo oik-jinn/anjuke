@@ -1,5 +1,0 @@
-### 1. [pc用户登录白皮书](http://gitlab.corp.anjuke.com/_site/docs/blob/master/API/%E5%AE%89%E5%B1%85%E5%AE%A2/API%E7%99%BD%E7%9A%AE%E4%B9%A6/pc_login_page_whitebook.md)
-### 2. [pc用户注册白皮书](http://gitlab.corp.anjuke.com/_site/docs/blob/master/API/%E5%AE%89%E5%B1%85%E5%AE%A2/API%E7%99%BD%E7%9A%AE%E4%B9%A6/pc_register_page_whitebook.md)
-### 3. [touch web 用户登录白皮书](http://gitlab.corp.anjuke.com/_site/docs/blob/master/API/%E5%AE%89%E5%B1%85%E5%AE%A2/API%E7%99%BD%E7%9A%AE%E4%B9%A6/touch_web_login_page_whitebook.md)
-### 4. [touch web 用户注册白皮书](http://gitlab.corp.anjuke.com/_site/docs/blob/master/API/%E5%AE%89%E5%B1%85%E5%AE%A2/API%E7%99%BD%E7%9A%AE%E4%B9%A6/touch_web_register_page_whitebook.md)
-### 5. [登录注册订阅流程图](http://gitlab.corp.anjuke.com/_site/docs/tree/master/DesignDoc/Member/%E6%B5%81%E7%A8%8B%E5%9B%BE)
